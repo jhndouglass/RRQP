@@ -1,0 +1,16 @@
+{
+    "contents" : "# John Douglass, R&F April 2013\n\n# _____________________________________________________________________________\n# File:\n# RRQP_testing.R\n#\n# Comments:\n# Test scripting for RRQP sutff\n#\n# Inputs:\n# NA\n#\n# Outputs:\n# NA\n# _____________________________________________________________________________\n\n# Fucntions\n# No thanks\n\n# Libraries\n\nlibrary(boot) #  not used yet\nlibrary(MCMCglmm) #  contains rtnorm() for truncated rnorm()\n\n# Set Working Directory\nsetwd(\"E:\\\\aWork\\\\Software(Models etc)\\\\RRQP\")\n\n# simulation\n\nset.seed(1892)  # set seed to ensure consistent outputs\n\n# User variables\nkSize <- 100000 #  x of simulated distributions\nus.f.m <- 150\nus.f.sd <- 15\nus.q.m <- 8\nus.q.sd <- 2\ndis.f.m <- 30\ndis.f.sd <- 10\ndis.q.m <- 17\ndis.q.sd <- 5\n\n# simulate distributions - normal lower limit = 0\nus.flow <- rtnorm(kSize, mean = us.f.m, sd = us.f.sd, lower = 0)\nus.qual <- rtnorm(kSize, mean = us.q.m, sd = us.q.sd, lower = 0)\ndis.flow <- rtnorm(kSize, mean = dis.f.m, sd = dis.f.sd, lower = 0)\ndis.qual <- rtnorm(kSize, mean = dis.q.m, sd = dis.q.sd, lower = 0)\nhist(us.flow); hist(us.qual); hist(dis.flow); hist(dis.qual)\nmean(us.flow); mean(us.qual); mean(dis.flow); mean(dis.qual)\n\n# simulate distribution - use inbuilt r lognormal dist - need to log mu and\n# sigma inputs. Note that rlnorm() doesn't seem to output in log space\n# gives silly results when put through mass balance - something weird happens\n# with the SD - it goes very large!\nus.flow <- rlnorm(kSize, meanlog = log(us.f.m), sdlog = log(us.f.sd))\nus.qual <- rlnorm(kSize, meanlog = log(us.q.m), sdlog = log(us.q.sd))\ndis.flow <- rlnorm(kSize, meanlog = log(dis.f.m), sdlog = log(dis.f.sd))\ndis.qual <- rlnorm(kSize, meanlog = log(dis.q.m), sdlog = log(dis.q.sd))\nhist(us.flow); hist(us.qual); hist(dis.flow); hist(dis.qual)\nmean(us.flow); mean(us.qual); mean(dis.flow); mean(dis.qual)\n\nz <- SimpleMassBalance(us.q = us.qual, us.f = us.flow, dis.q = dis.qual,\n                       dis.f = dis.flow, shots = 2500, cor = 1L)\n\nz <- SummaryMassBalance(us.q.m = us.q.m, us.q.sd = us.q.sd, us.f.m = us.f.m,\n                        us.f.sd = us.f.sd, dis.q.m = dis.q.m, dis.q.sd = dis.q.sd,\n                        dis.f.m = dis.f.m, dis.f.sd = dis.f.sd, dist = \"Normal\")\n\nz$Downstream.summary\nz$Upstream.summary\nz$Discharge.summary\n\n\n# test using sapply() - not really appropriate here...ignore\nfor(i in 1:shots){\n  ii <- sample(1:length(l[[1]]), 1, replace = TRUE)\n  ds.f[i] <- l$us.f[ii] + l$dis.f[ii]\n  ds.q[i] <- (((l$us.f[ii] * l$us.q[ii]) + (l$dis.f[ii] * l$dis.q[ii]))\n              / (l$us.f[ii] + l$dis.f[ii]))\n}\n\nl <- list(us.q = us.qual, us.f = us.flow, dis.q = dis.qual, dis.f = dis.flow)\n\nl$ds.f <- as.numeric(sapply(l, function(x){l$us.f + l$dis.f}))\n\n",
+    "created" : 1423646926697.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3803921791",
+    "id" : "D8401DB3",
+    "lastKnownWriteTime" : 1423729945,
+    "path" : "E:/aWork/Software/R/RRQP/RRQP_testing.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

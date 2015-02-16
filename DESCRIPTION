@@ -1,0 +1,18 @@
+Package: RRQP
+Type: Package
+Title: R Implementation of EA River Quality Planning Tools
+Version: 0.0.0.9000
+Date: 2015-02-10
+Authors@R: c(person("Douglass", "John", email = "john.douglass@environment-agency.gov.uk", role = c("aut", "cre")),
+            person("Agency", "Environment", role = "cph"))
+Description: An R implementation of the Fortran River Quality Planning tools. It
+    allows you to generate mass balance based estimates of water quality
+    downstream of a single discharge. Downstream water quality estimates can be
+    generated using summary statistics or by entering observed data. The R 
+    implementation should be considered more flexible than the Fortran GUI
+    versions, calibrated can be edited, distributions can be specified and
+    multiple 'RQPs' can be easily be chained.    
+License: OGLv3.0
+Imports: boot (>= 1.3-14),
+    MCMCglmm (>= 2.21)
+LazyData: true
